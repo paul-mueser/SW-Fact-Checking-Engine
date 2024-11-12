@@ -1,5 +1,16 @@
   stages:
+    - test
     - build
+  
+  maven_test:
+    image: maven:3.9.9-eclipse-temurin-21-jammy
+    stage: test
+    script: "mvn test"
+    tags:
+      - shared
+    only:
+      - main
+      - merge_requests
 
   maven_build:
     image: maven:3.9.9-eclipse-temurin-21-jammy
@@ -10,4 +21,8 @@
     artifacts:
       paths:
         - "target/*.jar"
-
+    only:
+      - main
+      - merge_requests
+    needs:
+      - maven_test

@@ -23,6 +23,5 @@
         - "target/*.jar"
     only:
       - main
-      - merge_requests
     needs:
       - maven_test

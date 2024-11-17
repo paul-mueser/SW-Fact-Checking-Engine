@@ -5,9 +5,24 @@ import org.apache.commons.cli.*;
 public class Main {
     private static String inputFilePath;
     private static String outputFilePath = "./result/";
+    private static boolean isTraining = false;
     
     public static void main(String[] args) {
         parseArguments(args);
+        if (isTraining) {
+            runTraining();
+        } else {
+            runPrediction();
+        }
+        System.exit(0);
+    }
+
+    private static void runPrediction() {
+        Log.rainbow("Mode", "Prediction");
+    }
+
+    private static void runTraining() {
+        Log.rainbow("Mode", "Training");
     }
 
     private static void parseArguments(String[] args) {
@@ -16,6 +31,7 @@ public class Main {
         // Add options here
         options.addOption("h", "help", false, "Show available options");
         options.addOption("i", "input", true, "Input file path");
+        options.addOption("t", "training", false, "Training mode");
         options.addOption("o", "output", true, "Output file path");
 
         CommandLineParser parser = new DefaultParser();
@@ -34,6 +50,10 @@ public class Main {
                 inputFilePath = cmd.getOptionValue("i");
             } else {
                 throw new ParseException("The i (input) option is required");
+            }
+            
+            if (cmd.hasOption("t")) {
+                isTraining = true;
             }
             
             if (cmd.hasOption("o")) {

@@ -39,6 +39,9 @@ public class Main {
             if (cmd.hasOption("o")) {
                 outputFilePath = cmd.getOptionValue("o");
             }
+
+            Executor executor = new Executor(inputFilePath, outputFilePath);
+            executor.execute();
             
         } catch (ParseException e) {
             Log.e("ArgumentParser", e.getMessage());

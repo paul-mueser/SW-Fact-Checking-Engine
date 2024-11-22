@@ -1,7 +1,12 @@
 package de.paulmueser.data;
 
+import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.rdf.model.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +20,7 @@ import java.util.Set;
 public class InputDataSet {
     private final String NAMESPACE = "http://dice-research.org/data/fb15k-237.ttl#";
 
-    private Model model;
+    private final Model model;
     private final boolean isTrainData;
 
     /**
@@ -25,20 +30,34 @@ public class InputDataSet {
      */
     public InputDataSet(String dataSet) {
         this.isTrainData = false;
-        this.model = ModelFactory.createDefaultModel();
-        this.model.read(dataSet);
+        this.model = createModel(dataSet);
     }
 
     /**
      * Constructs an InputDataSet with the given RDF data set and training data flag.
      *
-     * @param isTrainData flag indicating if the data is training data
      * @param dataSet the RDF data set file path
+     * @param isTrainData flag indicating if the data is training data
      */
-    public InputDataSet(boolean isTrainData, String dataSet) {
+    public InputDataSet(String dataSet, boolean isTrainData) {
         this.isTrainData = isTrainData;
-        this.model = ModelFactory.createDefaultModel();
-        this.model.read(dataSet);
+        this.model = createModel(dataSet);
+    }
+
+    private Model createModel(String dataSet) {
+        Model model = ModelFactory.createDefaultModel();
+        try {
+            File inputFile = new File(dataSet);
+            if (!inputFile.exists()) {
+                throw new FileNotFoundException("Input file not found: " + dataSet);
+            }
+            InputStream inputStream = new FileInputStream(inputFile);
+            model.read(inputStream, null, "N-TRIPLE");
+            // Process the model
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to read input file", e);
+        }
+        return model;
     }
 
     /**

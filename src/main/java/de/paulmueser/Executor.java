@@ -1,12 +1,17 @@
 package de.paulmueser;
 
+import de.paulmueser.data.InputDataSet;
+
 public class Executor {
     private final String inputFilePath;
     private final String outputFilePath;
+    private final boolean isTrainData;
+    private InputDataSet dataSet;
 
-    public Executor(String inputFilePath, String outputFilePath) {
+    public Executor(String inputFilePath, String outputFilePath, boolean isTrainData) {
         this.inputFilePath = inputFilePath;
         this.outputFilePath = outputFilePath;
+        this.isTrainData = isTrainData;
     }
 
     public void execute() {
@@ -16,7 +21,7 @@ public class Executor {
     }
 
     private void setup() {
-        readInputFile();
+        this.dataSet = readInputFile();
         //TODO setup input
     }
 
@@ -29,8 +34,8 @@ public class Executor {
         writeOutputFile();
     }
 
-    private void readInputFile() {
-        //TODO read input file
+    private InputDataSet readInputFile() {
+        return new InputDataSet(this.inputFilePath, this.isTrainData);
     }
 
     private void writeOutputFile() {

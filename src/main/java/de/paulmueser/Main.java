@@ -17,6 +17,7 @@ public class Main {
         options.addOption("h", "help", false, "Show available options");
         options.addOption("i", "input", true, "Input file path");
         options.addOption("o", "output", true, "Output file path");
+        options.addOption("t", "train", false, "Flag indicating if the data is training data");
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -31,6 +32,7 @@ public class Main {
             }
             
             if (cmd.hasOption("i")) {
+                System.out.println("Input file path: " + cmd.getOptionValue("i"));
                 inputFilePath = cmd.getOptionValue("i");
             } else {
                 throw new ParseException("The i (input) option is required");
@@ -40,7 +42,7 @@ public class Main {
                 outputFilePath = cmd.getOptionValue("o");
             }
 
-            Executor executor = new Executor(inputFilePath, outputFilePath);
+            Executor executor = new Executor(inputFilePath, outputFilePath, cmd.hasOption("t"));
             executor.execute();
             
         } catch (ParseException e) {

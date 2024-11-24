@@ -1,12 +1,12 @@
 package de.paulmueser.data;
 
-import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.RIOT;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,16 +22,6 @@ public class InputDataSet {
 
     private final Model model;
     private final boolean isTrainData;
-
-    /**
-     * Constructs an InputDataSet with the given RDF data set.
-     *
-     * @param dataSet the RDF data set file path
-     */
-    public InputDataSet(String dataSet) {
-        this.isTrainData = false;
-        this.model = createModel(dataSet);
-    }
 
     /**
      * Constructs an InputDataSet with the given RDF data set and training data flag.
@@ -58,6 +48,22 @@ public class InputDataSet {
             throw new RuntimeException("Failed to read input file", e);
         }
         return model;
+    }
+
+    public void writeOutputFile(String outputFilePath) {
+        OutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(outputFilePath);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Model resultModel = ModelFactory.createDefaultModel();
+        List<TestStatement> testStatements = this.getTestStatements();
+        for (TestStatement testStatement : testStatements) {
+            resultModel.add(testStatement.generateResultStatement());
+        }
+        RDFWriter.source(resultModel).lang(Lang.TTL).format(RDFFormat.TURTLE_FLAT).output(outputStream);
+        //resultModel.write(outputStream, "Turtle");
     }
 
     /**

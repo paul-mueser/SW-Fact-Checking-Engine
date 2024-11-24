@@ -9,20 +9,24 @@ public class Main {
     
     public static void main(String[] args) {
         parseArguments(args);
+        Executor executor = new Executor(inputFilePath, outputFilePath, isTraining);
         if (isTraining) {
-            runTraining();
+            runTraining(executor);
         } else {
-            runPrediction();
+            runPrediction(executor);
         }
         System.exit(0);
     }
 
-    private static void runPrediction() {
+    private static void runPrediction(Executor executor) {
         Log.rainbow("Mode", "Prediction");
+        
+        executor.execute();
     }
 
-    private static void runTraining() {
+    private static void runTraining(Executor executor) {
         Log.rainbow("Mode", "Training");
+        executor.execute();
     }
 
     private static void parseArguments(String[] args) {
@@ -61,9 +65,6 @@ public class Main {
             if (cmd.hasOption("o")) {
                 outputFilePath = cmd.getOptionValue("o");
             }
-
-            Executor executor = new Executor(inputFilePath, outputFilePath, cmd.hasOption("t"));
-            executor.execute();
             
         } catch (ParseException e) {
             Log.e("ArgumentParser", e.getMessage());

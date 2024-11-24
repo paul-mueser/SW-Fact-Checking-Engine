@@ -39,7 +39,7 @@ public class Executor {
     }
 
     private void writeOutputFile() {
-        //TODO write output file
+        this.dataSet.writeOutputFile(this.outputFilePath);
     }
 
     public String getInputFilePath() {

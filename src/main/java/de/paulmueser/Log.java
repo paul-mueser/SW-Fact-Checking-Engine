@@ -27,7 +27,7 @@ public class Log {
      * @param msg message of the log
      */
     public static void d(String tag, String msg) {
-        //System.out.println(tag + " : " + msg);
+        System.out.println(tag + " : " + msg);
     }
 
     /**
@@ -57,7 +57,7 @@ public class Log {
 
         String text = tag + " : " + msg;
 
-        //printInColor(text, yellowColor);
+        printInColor(text, yellowColor);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Log {
 
         String text = tag + " : " + msg;
 
-        //printInColor(text, greenColor);
+        printInColor(text, greenColor);
     }
 
     /**

@@ -5,9 +5,28 @@ import org.apache.commons.cli.*;
 public class Main {
     private static String inputFilePath;
     private static String outputFilePath = "./result/";
+    private static boolean isTraining = false;
     
     public static void main(String[] args) {
         parseArguments(args);
+        Executor executor = new Executor(inputFilePath, outputFilePath, isTraining);
+        if (isTraining) {
+            runTraining(executor);
+        } else {
+            runPrediction(executor);
+        }
+        System.exit(0);
+    }
+
+    private static void runPrediction(Executor executor) {
+        Log.rainbow("Mode", "Prediction");
+        
+        executor.execute();
+    }
+
+    private static void runTraining(Executor executor) {
+        Log.rainbow("Mode", "Training");
+        executor.execute();
     }
 
     private static void parseArguments(String[] args) {
@@ -16,6 +35,7 @@ public class Main {
         // Add options here
         options.addOption("h", "help", false, "Show available options");
         options.addOption("i", "input", true, "Input file path");
+        options.addOption("t", "training", false, "Training mode");
         options.addOption("o", "output", true, "Output file path");
         options.addOption("t", "train", false, "Flag indicating if the data is training data");
 
@@ -38,12 +58,13 @@ public class Main {
                 throw new ParseException("The i (input) option is required");
             }
             
+            if (cmd.hasOption("t")) {
+                isTraining = true;
+            }
+            
             if (cmd.hasOption("o")) {
                 outputFilePath = cmd.getOptionValue("o");
             }
-
-            Executor executor = new Executor(inputFilePath, outputFilePath, cmd.hasOption("t"));
-            executor.execute();
             
         } catch (ParseException e) {
             Log.e("ArgumentParser", e.getMessage());
